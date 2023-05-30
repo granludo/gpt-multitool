@@ -93,32 +93,54 @@ file_menu.add_command(label="Open", command=load_file)
 file_menu.add_command(label="Save", command=save_file)
 
 # GUI components
-chunk_size_var = tk.IntVar(value=120)
-chunk_size_entry = tk.Entry(root, textvariable=chunk_size_var)
-chunk_size_entry.pack()
+button_frame = tk.Frame(root)
+button_frame.pack(fill=tk.X)
 
-max_tokens_var = tk.StringVar(value='4000')
-max_tokens_entry = tk.Entry(root, textvariable=max_tokens_var)
-max_tokens_entry.pack()
+chunk_size_var = tk.IntVar(value=120)  # Define chunk_size_var
+chunk_size_label = tk.Label(button_frame, text="Chunk Size")
+chunk_size_label.pack(side=tk.LEFT)
+chunk_size_entry = tk.Entry(button_frame, textvariable=chunk_size_var)
+chunk_size_entry.pack(side=tk.LEFT)
 
-prompt_var = tk.StringVar(root)
-prompt_var.set(list(prompts.keys())[0])
-prompt_menu = tk.OptionMenu(root, prompt_var, *prompts.keys())
-prompt_menu.pack()
-load_prompt_button = tk.Button(root, text="Load Prompt", command=load_prompt)
-load_prompt_button.pack()
-save_prompt_button = tk.Button(root, text="Save Prompt", command=save_prompt)
-save_prompt_button.pack()
+max_tokens_var = tk.StringVar(value='4000')  # Define max_tokens_var
+max_tokens_label = tk.Label(button_frame, text="Max Tokens")
+max_tokens_label.pack(side=tk.LEFT)
+max_tokens_entry = tk.Entry(button_frame, textvariable=max_tokens_var)
+max_tokens_entry.pack(side=tk.LEFT)
 
-system_prompt_text = tk.Text(root, height=3, bg='white', fg='black')
-system_prompt_text.pack(fill=tk.X)
-user_prompt_text = tk.Text(root, height=3, bg='white', fg='black')
-user_prompt_text.pack(fill=tk.X)
+prompt_var = tk.StringVar()  # Define prompt_var
+prompt_menu = tk.OptionMenu(button_frame, prompt_var, *prompts.keys())
+prompt_menu.pack(side=tk.LEFT)
 
-text_area1 = tk.Text(root, wrap='word', width=80, bg='white', fg='black')
-text_area1.pack(fill=tk.BOTH, expand=True)
-text_area2 = tk.Text(root, wrap='word', width=80, bg='black', fg='white')
-text_area2.pack(fill=tk.BOTH, expand=True)
+system_prompt_label = tk.Label(button_frame, text="System Prompt:")
+system_prompt_label.pack(side=tk.LEFT)
+system_prompt_text = tk.Text(button_frame, height=2, width=30)
+system_prompt_text.pack(side=tk.LEFT)
+
+user_prompt_label = tk.Label(button_frame, text="User Prompt:")
+user_prompt_label.pack(side=tk.LEFT)
+user_prompt_text = tk.Text(button_frame, height=2, width=30)
+user_prompt_text.pack(side=tk.LEFT)
+
+load_prompt_button = tk.Button(button_frame, text="Load Prompt", command=load_prompt)
+load_prompt_button.pack(side=tk.LEFT)
+
+save_prompt_button = tk.Button(button_frame, text="Save Prompt", command=save_prompt)
+save_prompt_button.pack(side=tk.LEFT)
+
+process_button = tk.Button(button_frame, text='Run process', command=start_process)
+process_button.pack(side=tk.LEFT)
+
+
+text_area_frame = tk.Frame(root)
+text_area_frame.pack(fill=tk.BOTH, expand=True)
+
+text_area1 = tk.Text(text_area_frame, wrap='word', width=80, bg='white', fg='black')
+text_area1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+
+text_area2 = tk.Text(text_area_frame, wrap='word', width=80, bg='black', fg='white')
+text_area2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+
 
 status_text = scrolledtext.ScrolledText(root, wrap='word', bg='lightgray',fg='black')
 status_text.pack(expand=True, fill='both')

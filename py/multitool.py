@@ -24,6 +24,25 @@ MODEL = "gpt-4" # this model is way more expensive
 
 MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]  # options for OpenAI models
 
+# Load prompts
+with open("prompts.json") as fp:
+    data = json.load(fp)
+    prompts = {prompt['name']: {'system': prompt['system'], 'user': prompt['user']} for prompt in data['prompts']}
+
+# Function to load a prompt
+def load_prompt():
+    selected_prompt = prompt_var.get()
+    system_prompt_text.delete('1.0', tk.END)
+    system_prompt_text.insert('1.0', prompts[selected_prompt]['system'])
+    user_prompt_text.delete('1.0', tk.END)
+    user_prompt_text.insert('1.0', prompts[selected_prompt]['user'])
+
+# Function to save a modified prompt
+def save_prompt():
+    selected_prompt = prompt_var.get()
+    prompts[selected_prompt] = {'system': system_prompt_text.get('1.0', tk.END), 'user': user_prompt_text.get('1.0', tk.END)}
+    with open("prompts.json", "w") as fp:
+        json.dump({'prompts': [{'name': k, 'system': v['system'], 'user': v['user']} for k, v in prompts.items()]}, fp)
 
 def copy_edit(text):
     query=f"{text}"
@@ -179,12 +198,20 @@ status_text = scrolledtext.ScrolledText(status_frame, wrap='word', bg='lightgray
 status_text.pack(expand=True, fill='both')
 
 # Create a frame for prompt
-prompt_frame = tk.Frame(root)
-prompt_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
-prompt_label = tk.Label(prompt_frame, text='Prompt:')
-prompt_label.pack()
-prompt_text = tk.Text(prompt_frame, height=3, bg='white', fg='black')
-prompt_text.pack(fill=tk.X)
+# Create two frames for system and user prompts
+system_prompt_frame = tk.Frame(root)
+system_prompt_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
+system_prompt_label = tk.Label(system_prompt_frame, text='System Prompt:')
+system_prompt_label.pack()
+system_prompt_text = tk.Text(system_prompt_frame, height=3, bg='white', fg='black')
+system_prompt_text.pack(fill=tk.X)
+
+user_prompt_frame = tk.Frame(root)
+user_prompt_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
+user_prompt_label = tk.Label(user_prompt_frame, text='User Prompt:')
+user_prompt_label.pack()
+user_prompt_text = tk.Text(user_prompt_frame, height=3, bg='white', fg='black')
+user_prompt_text.pack(fill=tk.X)
 
 
 
